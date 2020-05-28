@@ -3,6 +3,8 @@ const morgan = require('morgan');
 
 require('dotenv').config();
 
+require('./database');
+
 const app = express();
 
 // TODO: Settings
