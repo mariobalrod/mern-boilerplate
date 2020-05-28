@@ -4,17 +4,26 @@
   "description": "MERN Stack boilerplate for Scalable Web Applications",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mariobalrod/mern-boilerplate.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "mariobalrod",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/mariobalrod/mern-boilerplate/issues"
   },
-  "homepage": "https://github.com/mariobalrod/mern-boilerplate#readme"
+  "homepage": "https://github.com/mariobalrod/mern-boilerplate#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.4"
+  }
 }
