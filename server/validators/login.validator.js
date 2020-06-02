@@ -21,16 +21,17 @@ module.exports = async function validateLoginInput (data) {
     //Check if user exist
     if (!user) {
         errors.push({ message: "User not exist" });
+    } else {
+        //Check if password match
+        const isMatch = await user.comparePassword(data.password)
+        if (!isMatch) {
+            errors.push({ message: "Password Incorrect" });
+        }
     }
 
     //! Password checks
     if (Validator.isEmpty(data.password)) {
         errors.push({message: "Password field is required"});
-    }
-    //Check if password match
-    const isMatch = await User.comparePassword(data.password)
-    if (!isMatch) {
-        errors.push({ message: "Password Incorrect" });
     }
 
     return {

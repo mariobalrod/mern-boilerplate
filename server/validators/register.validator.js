@@ -53,13 +53,13 @@ module.exports = async function validateRegisterInput (data) {
     }
 
     //! Check if user credentials are in use
-    const emailExist = await UserServices.findOneByEmail({email: data.email});
-    const usernameExist= await UserServices.findOneByUsername({username: data.username});
-    if (emailExistente) {
-        errors.push({ msg: "Email already exists" });
+    const emailExist = await UserServices.findOneByEmail(data.email);
+    const usernameExist= await UserServices.findOneByUsername(data.username);
+    if (emailExist) {
+        errors.push({ message: "Email already exists" });
     }
-    if (usernameExistente) {
-        errors.push({ msg: "Username already exists" });
+    if (usernameExist) {
+        errors.push({ message: "Username already exists" });
     }
 
     return {

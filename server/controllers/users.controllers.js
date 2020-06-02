@@ -1,12 +1,10 @@
-const bcrypt = require('bcryptjs');
-
 const UserServices = require('../services/users.services');
 
 // Loading input validation
-const validateRegisterInput = require("../validator/register.validator");
-const validateLoginInput = require("../validator/login.validator");
+const validateRegisterInput = require("../validators/register.validator");
+const validateLoginInput = require("../validators/login.validator");
 
-const User = require('../models/User');
+const User = require('../models/user.model');
 
 async function getUserById (req, res) {
     const id = req.params.id;
@@ -18,7 +16,7 @@ async function getUserById (req, res) {
             message: "Succesfully User Retrieved" 
         });
     } else {
-        return res.status(400).json({ status: 400, message: e.message });
+        return res.status(400).json({ status: 400, message: "User not found!" });
     }
 }
 
@@ -31,14 +29,20 @@ async function getUsers (req, res) {
             message: "Succesfully Users Retrieved" 
         });
     } else {
-        return res.status(400).json({ status: 400, message: e.message });
+        return res.status(400).json({ status: 400, message: "Are not users!" });
     }
 }
 
 async function deleteUser (req, res) {
     const id = req.params.id;
-    await UserServices.deleteUserById(id);
-    return res.status(200).json({ status: 200, message: "User Succesfully Deleted!" });
+    const user = await UserServices.findUserById(id);
+    if (user) {
+        await UserServices.deleteUserById(id);
+        return res.status(200).json({ status: 200, message: "User Succesfully Deleted!" });
+    } else {
+        return res.status(400).json({ status: 400, message: "User not found!" });
+    }
+    
 }
 
 async function login (req, res) {
@@ -46,9 +50,9 @@ async function login (req, res) {
     const { errors, isValid } = await validateLoginInput(req.body);
     // Check Validation
     if (!isValid) {
-        res.json({loginSucces: false, data: errors});
+        return res.json({loginSuccess: false, data: errors});
     } else {
-        res.status(200).json({loginSucces: true, message: "Succesfully loged!"});
+        return res.status(200).json({loginSuccess: true, message: "Succesfully loged!"});
     }
 }
 
@@ -57,7 +61,7 @@ async function register (req, res) {
     const { errors, isValid } = await validateRegisterInput(req.body);
     // Check Validation
     if (!isValid) {
-        res.json({registerSucces: false, data: errors});
+        return res.json({registerSuccess: false, data: errors});
     } else {
         const newUser = new User({
             email: req.body.email,
@@ -66,8 +70,9 @@ async function register (req, res) {
             firstname: req.body.firstname,
             lastname: req.body.lastname
         });
-        newUser.password = await User.encryptPassword(password);
-        res.status(200).json({registerSucces: true, message: "Succesfully registered!"});        
+        newUser.password = await newUser.encryptPassword(req.body.password);
+        await UserServices.saveUser(newUser);
+        return res.status(200).json({registerSuccess: true, message: "Succesfully registered!"});        
     }
 }
 

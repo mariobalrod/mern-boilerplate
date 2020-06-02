@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 
+const routes = require('./routes/index');
+
 require('dotenv').config();
 
 require('./database');
@@ -16,6 +18,5 @@ app.use(express.json());
 
 // TODO: Routes
 app.use('/api', routes);
-
 
 module.exports = app;
