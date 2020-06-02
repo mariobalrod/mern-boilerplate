@@ -18,9 +18,21 @@ async function deleteUserById (id) {
     await User.findByIdAndDelete(id);
 }
 
+async function findOneByUsername (username) {
+    const user = await User.findOne({username: username});
+    return user;
+}
+
+async function findOneByEmail (email) {
+    const user = await User.findOne({email: email});
+    return user;
+}
+
 module.exports = {
     findUserById,
     findUsers,
     saveUser,
-    deleteUserById
+    deleteUserById,
+    findOneByUsername,
+    findOneByEmail
 }

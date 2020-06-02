@@ -14,4 +14,8 @@ app.set('port', process.env.PORT || 8080);
 app.use(morgan('dev'));
 app.use(express.json());
 
+// TODO: Routes
+app.use('/api', routes);
+
+
 module.exports = app;

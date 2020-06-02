@@ -1,5 +1,10 @@
+const bcrypt = require('bcryptjs');
 
-const UserServices = require('../services/users.services') 
+const UserServices = require('../services/users.services');
+
+// Loading input validation
+const validateRegisterInput = require("../validator/register.validator");
+const validateLoginInput = require("../validator/login.validator");
 
 const User = require('../models/User');
 
@@ -37,11 +42,33 @@ async function deleteUser (req, res) {
 }
 
 async function login (req, res) {
-
+    // Validation
+    const { errors, isValid } = await validateLoginInput(req.body);
+    // Check Validation
+    if (!isValid) {
+        res.json({loginSucces: false, data: errors});
+    } else {
+        res.status(200).json({loginSucces: true, message: "Succesfully loged!"});
+    }
 }
 
 async function register (req, res) {
-
+    // Validation
+    const { errors, isValid } = await validateRegisterInput(req.body);
+    // Check Validation
+    if (!isValid) {
+        res.json({registerSucces: false, data: errors});
+    } else {
+        const newUser = new User({
+            email: req.body.email,
+            username: req.body.username,
+            password: req.body.password,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname
+        });
+        newUser.password = await User.encryptPassword(password);
+        res.status(200).json({registerSucces: true, message: "Succesfully registered!"});        
+    }
 }
 
 module.exports = {
