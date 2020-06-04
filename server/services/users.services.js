@@ -28,11 +28,16 @@ async function findOneByEmail (email) {
     return user;
 }
 
+async function findAndUpdate (id, data) {
+    await User.findOneAndUpdate( id, data);
+}
+
 module.exports = {
     findUserById,
     findUsers,
     saveUser,
     deleteUserById,
     findOneByUsername,
-    findOneByEmail
+    findOneByEmail,
+    findAndUpdate
 }

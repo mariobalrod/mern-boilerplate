@@ -42,12 +42,12 @@ UserSchema.methods.generateToken = function (cb) {
 UserSchema.statics.findByToken = function (token, cb) {
     var user = this;
 
-    jwt.verify(token,'secret',function(err, decode){
+    jwt.verify(token, 'secret', function(err, decode){
         user.findOne({"_id":decode, "token":token}, function(err, user) {
             if(err) return cb(err);
             cb(null, user);
         })
-    })
+    });
 }
 
 module.exports = model('User', UserSchema);

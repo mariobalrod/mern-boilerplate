@@ -36,7 +36,8 @@ module.exports = async function validateLoginInput (data) {
 
     return {
         errors,
-        isValid: isEmpty(errors)
+        isValid: isEmpty(errors),
+        user
     };
 
 };

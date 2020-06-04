@@ -47,12 +47,19 @@ async function deleteUser (req, res) {
 
 async function login (req, res) {
     // Validation
-    const { errors, isValid } = await validateLoginInput(req.body);
+    const { errors, isValid, user } = await validateLoginInput(req.body);
     // Check Validation
     if (!isValid) {
         return res.json({loginSuccess: false, data: errors});
     } else {
-        return res.status(200).json({loginSuccess: true, message: "Succesfully loged!"});
+        user.generateToken((err, user) => {
+            if (err) return res.status(400).send(err);
+            res.cookie("w_authExp", user.tokenExp);
+            res
+                .cookie("w_auth", user.token)
+                .status(200);
+            return res.status(200).json({loginSuccess: true, message: "Succesfully loged!", userId: user._id});
+        });
     }
 }
 
@@ -76,10 +83,30 @@ async function register (req, res) {
     }
 }
 
+async function logout (req, res) { 
+    UserServices.findAndUpdate( req.user._id, { token: "", tokenExp: "" });
+    return res.status(200).json({message: "See you soon!"});
+}
+
+async function authentication (req, res) {
+    res.status(200).json({
+        _id: req.user._id,
+        isAdmin: req.user.role === 0 ? false : true,
+        isAuth: true,
+        email: req.user.email,
+        name: req.user.name,
+        lastname: req.user.lastname,
+        role: req.user.role,
+        image: req.user.image,
+    });
+}
+
 module.exports = {
     login,
     register,
     getUsers,
     getUserById,
-    deleteUser
+    deleteUser,
+    logout,
+    authentication
 }
