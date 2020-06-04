@@ -2,7 +2,9 @@ const mongoose = require('mongoose');
 
 require('dotenv').config();
 
-const URI = process.env.MONGO_URI || 'mongodb://localhost/mern-boilerplate';
+const config = require("./config/key");
+
+const URI = config.mongoURI;
 
 mongoose.connect(URI, {
     useCreateIndex: true,
@@ -10,7 +12,7 @@ mongoose.connect(URI, {
     useUnifiedTopology: true,
     useFindAndModify: false
 }) 
-    .then(db => console.log('DB connected:', URI))
+    .then(() => console.log('DB connected:', URI))
     .catch(err => console.error(err));
 
 module.exports = mongoose;
